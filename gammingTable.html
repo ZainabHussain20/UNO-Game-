@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script defer src="Game.js"></script>
+    <link rel="stylesheet" href="gameStyle.css">
+ 
+    <title>Gamming Table</title>
+</head>
+<body>
+    <div class="container">
+        <!-- computer Area -->
+
+    <div class ='computerArea'>
+        <div class='computerCard'>
+            <img src="assets/back.png" alt="">
+            <img src="assets/back.png" alt="">
+            <img src="assets/back.png" alt="">
+            <img src="assets/back.png" alt="">
+            <img src="assets/back.png" alt="">
+        </div>
+        <div class='computer-animation hidden'>
+            <img id='computer-uno' src="assets/uno!.png" alt="">
+        </div>
+    </div>
+    <!-- Playing Area -->
+
+    <div clas ='Table'>
+        <div class='play-pile'>
+            <img src="assets/blue2.png" alt="">
+        </div>
+        <div class='draw-pile'>
+            <img src="assets/back.png" alt="">
+        </div>
+        <img id="draw-card" class='hidden' src="assets/back.png" alt="">
+     
+    </div>
+    <div class='end-of-round hidden'>
+        <p class='round'>Computer won the round!</p>
+    </div>
+    <div class='end-of-game hidden'>
+        <p class='game'>Player won the game!</p>
+        <button class='play-again'>Again!</button>
+    </div>
+    <!-- Player Area -->
+    <div clas ='PlayerArea'>
+        <div class='PlayerCard'>
+            <img src="assets/blue9.png" alt="">
+        </div>
+        <div class='Player-animation hidden'>
+            <img id='Player-uno' src="assets/uno!.png" alt="">
+        </div>
+    </div>
+    <!-- Allow user choose color for wild color/draw -->
+    <div class='color-picker'>
+        <p>Select a color:</p>
+        <div>
+            <button class='red'>Red</button>
+            <button class='green'>Green</button>
+            <button class='blue'>Blue</button>
+            <button class='yellow'>Yellow</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
