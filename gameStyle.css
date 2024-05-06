@@ -1,10 +1,11 @@
 body{
     
-    background-image: linear-gradient(to right, red 30%, yellow );
+    background: linear-gradient(106deg, rgba(255,49,49,1) 0%, rgba(255,123,70,1) 77%, rgba(255,145,77,1) 100%);
     background-size: 100vw 100vh;
     width: 100vw;
     height: 100vh;
     font-family: 'Avenir Next';
+    background-size: cover;
 }
 
 .container {
@@ -25,18 +26,26 @@ body{
 }
 
 .Table {
-    display: flex;
-    justify-content: space-evenly;
-    flex-direction: row;        
-    align-items: center; 
-    margin-top: 50px; 
+    width: 100%;
+    flex-direction:row ;        
+    padding: 100px; 
+    /* grid-template-columns: repeat(2, auto); */
+    /* grid-template-rows: auto;  gap: 150px; */
+    
+    display:flex ;
+    justify-content: space-around;
+    
 }
+/* 
+    width: 500px;
+    /* 
+    height: 200px;
+    margin-bottom: 100px;
+} */
+.play-pile{background-color: aliceblue;
+    margin-left: 500px
 
-
-
-
-
-
+} 
 .PlayerArea {
     display: flex;
     justify-content: center;
@@ -44,7 +53,9 @@ body{
     align-items: center; 
     margin-top: 100px; 
 }
-
+#card1{
+margin-left: 0%;
+}
 
 img {
     width: 100px;
@@ -70,6 +81,7 @@ img {
 }
 
 .draw-pile img {
+    display: flex;
     transition: all 0.1s ease-in-out;
 }
 
@@ -87,6 +99,7 @@ img {
 .player-draw {
     transform: translateY(260px) translateX(-100px);
     transition: all 0.2s ease-in-out;
+
 }
 .computer-draw {
     transform: translateY(-260px) translateX(-100px);
