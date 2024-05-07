@@ -1,3 +1,16 @@
+//DOM Variables
+const compHand = document.querySelector('.computerCard')
+const playerHand = document.querySelector('.PlayerCard')
+
+
+const playPileDom = document.querySelector('.play-pile')
+const drawPileDom = document.querySelector('.draw-pile')
+
+const playerUno = document.querySelector('.player-animation')
+const cpuUno = document.querySelector('.computer-animation')
+
+//some global variables 
+
 const initUNO = [
     //blue color
     {type:'number',color:'blue',value:'0',img:'assets/blue0.png' },
@@ -61,7 +74,6 @@ const initUNO = [
     {type:'action',color:'',value:'13',img:'assets/wild13.png'},
     {type:'action',color:'',value:'14',img:'assets/wild14.png'},
     {type:'action',color:'',value:'13',img:'assets/wild13.png'},
-    {type:'action',color:'',value:'14',img:'assets/wild14.png'},
     {type:'action',color:'',value:'13',img:'assets/wild13.png'},
     {type:'action',color:'',value:'14',img:'assets/wild14.png'},
 ]
@@ -88,30 +100,54 @@ function shuffleArray(array) {
 
 
 function letStart() {
-    if (UNO.length === 0) {
-        console.log("UNO array is empty. Make sure to initialize it.");
-        return;
-    }
-
+    
+// I want to display UNO.img on play-pile
     const randomIndex = Math.floor(Math.random() * UNO.length);
     currentCard = UNO[randomIndex];
     UNO.splice(randomIndex, 1);
+    //to change constant card for this specific id 
+    const playPileImg = document.getElementById('card1');
+    playPileImg.src = currentCard.img;
 
+    
     for (let i = 0; i < 5; i++) {
         const randomIndex = Math.floor(Math.random() * UNO.length);
         computer.push(UNO[randomIndex]);
         UNO.splice(randomIndex, 1);
     }
-
+    // I want to display UNO.img on PlayerCard
     for (let i = 0; i < 5; i++) {
         const randomIndex = Math.floor(Math.random() * UNO.length);
         player.push(UNO[randomIndex]);
         UNO.splice(randomIndex, 1);
     }
-    
+    // to select all images on PlayerCard class, loop this instruction to change the constant cards with current player card 
+    const playerCards = document.querySelectorAll('.PlayerCard img');
+    playerCards.forEach((cardImg, index) => {
+        cardImg.src = player[index].img;
+        cardImg.addEventListener('click', () => {
+            // Update currentCard with the player selected card
+            currentCard = player[index];
+            
+            // Update image url of the current card on the play pile
+            const playPileImg = document.getElementById('card1');
+            playPileImg.src = currentCard.img;
+        });
+    });
+  
+
     Draw = UNO;
     shuffleArray(Draw);
-
+    drawPileDom.addEventListener('click', () => {
+        console.log("Draw pile clicked");
+        if (Draw.length > 0) {
+            player.push(Draw[0]);
+            Draw.shift();
+            console.log("Player:", player); 
+            console.log("Draw:", Draw); 
+            updatePlayerCards(); 
+        }
+    });
     console.log('Current Card:', currentCard);
     console.log('Computer:', computer);
     console.log('Player:', player);
@@ -123,6 +159,8 @@ function letStart() {
 
 letStart();
 
+
+
 function resetGame() {
     UNO = [...initUNO];
     currentCard = '';
@@ -132,3 +170,14 @@ function resetGame() {
     letStart();
 }
 
+function updatePlayerCards() {
+    const playerCardsContainer = document.querySelector('.PlayerCard');
+    playerCardsContainer.innerHTML = ''; 
+
+    player.forEach(card => {
+        const cardImg = document.createElement('img');
+        cardImg.src = card.img;
+        //cardImg.alt = `${card.color} ${card.type} ${card.value}`;
+        playerCardsContainer.appendChild(cardImg); //to represent card on the page
+    });
+}
