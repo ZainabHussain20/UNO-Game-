@@ -115,25 +115,23 @@ function letStart() {
         computer.push(UNO[randomIndex]);
         UNO.splice(randomIndex, 1);
     }
-    // I want to display UNO.img on PlayerCard
     for (let i = 0; i < 5; i++) {
         const randomIndex = Math.floor(Math.random() * UNO.length);
         player.push(UNO[randomIndex]);
         UNO.splice(randomIndex, 1);
     }
-    // to select all images on PlayerCard class, loop this instruction to change the constant cards with current player card 
-    const playerCards = document.querySelectorAll('.PlayerCard img');
-    playerCards.forEach((cardImg, index) => {
-        cardImg.src = player[index].img;
-        cardImg.addEventListener('click', () => {
-            // Update currentCard with the player selected card
-            currentCard = player[index];
+    // const playerCards = document.querySelectorAll('.PlayerCard img');
+    // playerCards.forEach((cardImg, index) => {
+    //     cardImg.src = player[index].img;
+    //     cardImg.addEventListener('click', () => {
+    //         currentCard = player[index];
             
-            // Update image url of the current card on the play pile
-            const playPileImg = document.getElementById('card1');
-            playPileImg.src = currentCard.img;
-        });
-    });
+    //         const playPileImg = document.getElementById('card1');
+    //         playPileImg.src = currentCard.img;
+    //     });
+    // });
+    updatePlayerCards(); 
+
   
 
     Draw = UNO;
@@ -147,6 +145,9 @@ function letStart() {
             console.log("Draw:", Draw); 
             updatePlayerCards(); 
         }
+        else {
+            console.log('Draw empty')
+        }
     });
     console.log('Current Card:', currentCard);
     console.log('Computer:', computer);
@@ -157,7 +158,6 @@ function letStart() {
     UNO = [...initUNO];
 }
 
-letStart();
 
 
 
@@ -169,15 +169,25 @@ function resetGame() {
     Draw = [];
     letStart();
 }
-
 function updatePlayerCards() {
     const playerCardsContainer = document.querySelector('.PlayerCard');
-    playerCardsContainer.innerHTML = ''; 
+    playerCardsContainer.innerHTML = '';
 
-    player.forEach(card => {
+    player.forEach((card, index) => {
         const cardImg = document.createElement('img');
         cardImg.src = card.img;
-        //cardImg.alt = `${card.color} ${card.type} ${card.value}`;
-        playerCardsContainer.appendChild(cardImg); //to represent card on the page
+        cardImg.addEventListener('click', () => {
+            currentCard = player[index];
+            // Remove the clicked card from the player array
+            player.splice(index, 1);
+            // Update the play pile card
+            const playPileImg = document.getElementById('card1');
+            playPileImg.src = currentCard.img;
+            // Re-render the player's cards
+            updatePlayerCards();
+        });
+        playerCardsContainer.appendChild(cardImg);
     });
 }
+
+letStart();
