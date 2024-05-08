@@ -9,6 +9,7 @@ const drawPileDom = document.querySelector('.draw-pile')
 const playerUno = document.querySelector('.player-animation')
 const cpuUno = document.querySelector('.computer-animation')
 
+
 //some global variables 
 
 const initUNO = [
@@ -103,13 +104,22 @@ function shuffleArray(array) {
 
 function letStart() {
     
-// I want to display UNO.img on play-pile
-    const randomIndex = Math.floor(Math.random() * UNO.length);
+// Select a random card from UNO array
+let randomIndex = Math.floor(Math.random() * UNO.length);
+currentCard = UNO[randomIndex];
+
+// If the randomly selected card is of type 'action', choose another random index until it selects a card of type 'number'
+while (currentCard.type === 'action') {
+    randomIndex = Math.floor(Math.random() * UNO.length);
     currentCard = UNO[randomIndex];
-    UNO.splice(randomIndex, 1);
-    //to change constant card for this specific id 
-    const playPileImg = document.getElementById('card1');
-    playPileImg.src = currentCard.img;
+}
+
+// Remove the selected card from the UNO array
+UNO.splice(randomIndex, 1);
+
+// Update the play pile image with the selected card's image
+const playPileImg = document.getElementById('card1');
+playPileImg.src = currentCard.img;
 
     
     for (let i = 0; i < 5; i++) {
@@ -122,16 +132,7 @@ function letStart() {
         player.push(UNO[randomIndex]);
         UNO.splice(randomIndex, 1);
     }
-    // const playerCards = document.querySelectorAll('.PlayerCard img');
-    // playerCards.forEach((cardImg, index) => {
-    //     cardImg.src = player[index].img;
-    //     cardImg.addEventListener('click', () => {
-    //         currentCard = player[index];
-            
-    //         const playPileImg = document.getElementById('card1');
-    //         playPileImg.src = currentCard.img;
-    //     });
-    // });
+   
     updatePlayerCards(); 
 
   
@@ -209,7 +210,7 @@ function updatePlayerCards() {
             cardImg.style.border = 'none';
         });
 
-        // Add event listener for wild card to show color picker
+        // Show color picker when clicking on a wild card
         if (card.type === 'action' && (card.value === '13' || card.value === '14')) {
             cardImg.addEventListener('click', () => {
                 showColorPicker();
@@ -219,6 +220,7 @@ function updatePlayerCards() {
         playerCardsContainer.appendChild(cardImg);
     });
 }
+
 
 function checkPlayConditions(selectedCard, currentCard) {
     // Check if the selected card is a number card
@@ -268,9 +270,42 @@ function checkPlayConditions(selectedCard, currentCard) {
     return false;
 }
 
-function showColorPicker() {
-    const colorPicker = document.querySelector('.color-picker');
-    colorPicker.classList.remove('hidden');
+const showColorPicker = () => {
+    // show the color picker
+    const colorPicker = document.querySelector('.color-picker')
+    colorPicker.style.opacity = 1
+    colorPickerIsOpen = true
+
+    //assign eventHandler's to buttons
+    document.querySelector('.red').addEventListener('click', (e) => {
+        // pass thru the class name for color
+        chooseColor('rgb(255, 6, 0)')
+    })
+    document.querySelector('.green').addEventListener('click', (e) => {
+        // pass thru the class name for color
+        chooseColor('rgb(0, 170, 69)')
+    })
+    document.querySelector('.blue').addEventListener('click', (e) => {
+        // pass thru the class name for color
+        chooseColor('rgb(0, 150, 224)')
+    })
+    document.querySelector('.yellow').addEventListener('click', (e) => {
+        // pass thru the class name for color
+        chooseColor('rgb(255, 222, 0)')
+    })
+}
+
+const chooseColor = (rgb) => {
+    currentCard.color = rgb; 
+    selectedColor = rgb; 
+    // hide the color picker
+    hideColorPicker();
+}
+
+function hideColorPicker() {
+    const colorPicker = document.querySelector('.color-picker')
+    colorPicker.style.opacity = 0
+    colorPickerIsOpen = false
 }
 
 letStart();

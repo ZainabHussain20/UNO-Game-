@@ -133,9 +133,33 @@ img {
     width: 60vw;
     margin: auto;
     margin-top: 20px;
-    text-align: center;
     opacity: 0;
 }
+
+.color-picker p {
+    color: rgb(241, 241, 241);
+    font-size: large;
+    font-style: italic;
+    font-family: monospace;
+}
+
+.red {
+    background-color: red;
+}
+
+.green {
+    background-color: green;
+}
+
+.blue {
+    background-color: blue;
+}
+
+.yellow {
+    background-color: yellow;
+    color: black;
+}
+
 
 .color-picker p {
     color: rgb(134, 174, 204);
