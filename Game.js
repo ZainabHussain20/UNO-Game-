@@ -203,16 +203,6 @@ function updatePlayerCards() {
             }
         });
 
-        cardImg.addEventListener('mouseenter', () => {
-            if (player[index].type === 'action' && (player[index].value === '13' || player[index].value === '14')) {
-                cardImg.style.border = `2px solid ${selectedColor}`;
-            }
-        });
-        
-        cardImg.addEventListener('mouseleave', () => {
-            cardImg.style.border = 'none';
-        });
-
         if (card.type === 'action' && (card.value === '13' || card.value === '14')) {
             cardImg.addEventListener('click', () => {
                 showColorPicker();
@@ -251,21 +241,42 @@ function checkPlayConditions(selectedCard, currentCard) {
 
             case '12': // Draw Two card
                 
-                playAgain=true
-                return selectedCard.color === currentCard.color || selectedCard.value === currentCard.value;
-                
+            playAgain=true;
+            // Add two cards from the Draw array to the computer's hand
+            for (let i = 0; i < 2; i++) {
+                if (Draw.length > 0) {
+                    const backCardImg = document.createElement('img');
+                    backCardImg.src = 'assets/back.png'; // Assuming the back.png image path
+                    compHand.appendChild(backCardImg); // Append the back card to the computer's hand container
+                    computer.push(Draw[0]);
+                    Draw.shift();
+                }
+            }
+           
+            console.log(computer)
+            console.log(Draw)
+            return selectedCard.color === currentCard.color || selectedCard.value === currentCard.value;
+
             case '13': 
             // Wild card
                 // Wild cards can always be played
                 playAgain=true
                 return true;
 
-            case '14': 
-            // Wild Draw Four card
-            // Wild cards can always be played
-
-                playAgain=true
+                case '14': // Wild Draw Four card
+                playAgain=true;
+                // Add four cards from the Draw array to the computer's hand
+                for (let i = 0; i < 4; i++) {
+                    if (Draw.length > 0) {
+                        const backCardImg = document.createElement('img');
+                        backCardImg.src = 'assets/back.png'; // Assuming the back.png image path
+                        compHand.appendChild(backCardImg); // Append the back card to the computer's hand container
+                        computer.push(Draw[0]);
+                        Draw.shift();
+                    }
+                }
                 return true;
+
 
             default:
                 return false; 
@@ -282,57 +293,33 @@ const showColorPicker = () => {
     colorPickerIsOpen = true
 
     document.querySelector('.red').addEventListener('click', (e) => {
-        chooseColor('rgb(255, 6, 0)')
+        chooseColor('red')
     })
     document.querySelector('.green').addEventListener('click', (e) => {
-        chooseColor('rgb(0, 170, 69)')
+        chooseColor('green')
     })
     document.querySelector('.blue').addEventListener('click', (e) => {
-        chooseColor('rgb(0, 150, 224)')
+        chooseColor('blue')
     })
     document.querySelector('.yellow').addEventListener('click', (e) => {
-        chooseColor('rgb(255, 222, 0)')
+        chooseColor('yellow')
     })
 }
-
-const chooseColor = (rgb) => {
-    currentCard.color = rgb; 
-    selectedColor = rgb; 
-    // hide the color picker class again
+const chooseColor = (color) => {
+    currentCard.color = color; 
+    selectedColor = color; 
+    console.log("Selected color:", selectedColor);
+    console.log("Current card after selecting color:", currentCard);
+    const playPileImg = document.getElementById('card1');
+    playPileImg.src = currentCard.img;
     hideColorPicker();
 }
+
 
 function hideColorPicker() {
     const colorPicker = document.querySelector('.color-picker')
     colorPicker.style.opacity = 0
     colorPickerIsOpen = false
-}
-
-
-
-
-
-
-
-const showUno = (unoHand) => {
-    // remove hidden class from player-uno div
-    unoHand.classList.remove('hidden')
-    console.log('removed HIDDEN from', unoHand)
-
-    // add shout class
-    setTimeout(() => {
-        unoHand.classList.add('shout')
-        console.log('added SHOUT to', unoHand)
-        setTimeout(() => {
-            unoHand.classList.remove('shout')
-            console.log('removed SHOUT from', unoHand)
-
-            setTimeout(() => {
-                unoHand.classList.add('hidden')
-                console.log('added HIDDEN to', unoHand)
-            }, 1000)
-        }, 1000)
-    }, 10) 
 }
 
 
