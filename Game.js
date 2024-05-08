@@ -92,6 +92,10 @@ let Draw=[]
 let UNO=[...initUNO]
 playAgain=false 
 let selectedColor =''
+let playerTurn = true
+let cpuDelay = Math.floor((Math.random() * computer.length * 200) + 1500)
+
+
 
 //Search About it (I don't know it before)
 function shuffleArray(array) {
@@ -109,10 +113,13 @@ let randomIndex = Math.floor(Math.random() * UNO.length);
 currentCard = UNO[randomIndex];
 
 // If the randomly selected card is of type 'action', choose another random index until it selects a card of type 'number'
+console.log(currentCard)
 while (currentCard.type === 'action') {
     randomIndex = Math.floor(Math.random() * UNO.length);
     currentCard = UNO[randomIndex];
 }
+
+
 
 // Remove the selected card from the UNO array
 UNO.splice(randomIndex, 1);
@@ -134,8 +141,6 @@ playPileImg.src = currentCard.img;
     }
    
     updatePlayerCards(); 
-    updateComputerCards();
-    updateGameState()
     
 
     Draw = UNO;
@@ -164,7 +169,6 @@ playPileImg.src = currentCard.img;
     UNO = [...initUNO];
     
     
-    
 }
 
 
@@ -177,9 +181,7 @@ function resetGame() {
     player = [];
     Draw = [];
     letStart();
-    
 }
-
 function updatePlayerCards() {
     const playerCardsContainer = document.querySelector('.PlayerCard');
     playerCardsContainer.innerHTML = '';
@@ -188,34 +190,29 @@ function updatePlayerCards() {
         const cardImg = document.createElement('img');
         cardImg.src = card.img;
         cardImg.addEventListener('click', () => {
-            if (checkPlayConditions(player[index], currentCard)) {
+            if (checkPlayConditions(player[index], currentCard )) {
                 currentCard = player[index];
-                // Remove the clicked card from the player array
                 player.splice(index, 1);
-                // Update the play pile card
                 const playPileImg = document.getElementById('card1');
                 playPileImg.src = currentCard.img;
-                // Re-render the player's cards
                 updatePlayerCards();
-                playAgain = false; // Reset playAgain flag after playing a valid card
-            } else {
+            } 
+            
+            else {
                 console.log("You can't play this card");
             }
         });
 
         cardImg.addEventListener('mouseenter', () => {
             if (player[index].type === 'action' && (player[index].value === '13' || player[index].value === '14')) {
-                // If it's a wild card, add a border with the color chosen by the user
                 cardImg.style.border = `2px solid ${selectedColor}`;
             }
         });
         
         cardImg.addEventListener('mouseleave', () => {
-            // Remove the border when the mouse leaves the card
             cardImg.style.border = 'none';
         });
 
-        // Show color picker when clicking on a wild card
         if (card.type === 'action' && (card.value === '13' || card.value === '14')) {
             cardImg.addEventListener('click', () => {
                 showColorPicker();
@@ -227,111 +224,56 @@ function updatePlayerCards() {
 }
 
 
-function updateComputerCards() {
-    const computerCardsContainer = document.querySelector('.computerCard'); 
-    computerCardsContainer.innerHTML = '';
 
-    computer.forEach((card, index) => {
-        const cardImg = document.createElement('img');
-        cardImg.src = 'assets/back.png';
 
-        //to disable interaction
-        cardImg.style.pointerEvents = 'none';
-
-        computerCardsContainer.appendChild(cardImg);
-    });
-}
-function playCard(selectedCard, index) {
-    if (checkPlayConditions(selectedCard)) {
-        currentCard = selectedCard;
-        player.splice(index, 1);
-        const playPileImg = document.getElementById('card1');
-        playPileImg.src = currentCard.img;
-        updatePlayerCards();
-        playAgain = false;
-
-        // Handle Skip and Reverse cards
-        if (currentCard.value === '10' || currentCard.value === '11') {
-            switchTurns(); // Skip the computer's turn
+function checkPlayConditions(selectedCard, currentCard) {
+    // Check if the selected card is a number card
+    if (selectedCard.type === 'number') {
+        if (selectedCard.color === currentCard.color || selectedCard.value === currentCard.value) {
+            return true;
         }
-
-        // Handle Wild cards
-        if (currentCard.value === '13' || currentCard.value === '14') {
-            showColorPicker();
-            return;
-        }
-
-        switchTurns();
-    } else {
-        console.log("You can't play this card");
+        return false;
     }
-}
-
-
-// function checkPlayConditions(selectedCard, currentCard) {
-//     // Check if the selected card is a number card
-//     if (selectedCard.type === 'number') {
-//         if (selectedCard.color === currentCard.color || selectedCard.value === currentCard.value) {
-//             return true;
-//         }
-//         return false;
-//     }
 
 
 
     
-//     // If the selected card is an action card
-//    else if (selectedCard.type === 'action') {
-//         switch (selectedCard.value) {
-//             case '10': // Skip card
-//                 playAgain=true
-//                 return selectedCard.color === currentCard.color || selectedCard.value === currentCard.value;
-
-//             case '11': // Reverse card
-//                 playAgain=true
-//                 return selectedCard.color === currentCard.color || selectedCard.value === currentCard.value;
-
-//             case '12': // Draw Two card
-                
-//                 playAgain=true
-//                 return selectedCard.color === currentCard.color || selectedCard.value === currentCard.value;
-                
-//             case '13': 
-//             // Wild card
-//                 // Wild cards can always be played
-//                 playAgain=true
-//                 return true;
-
-//             case '14': 
-//             // Wild Draw Four card
-//             // Wild cards can always be played
-
-//                 playAgain=true
-//                 return true;
-
-//             default:
-//                 return false; 
-//         }
-//     }
-//     return false;
-// }
-function checkPlayConditions(selectedCard) {
-    if (selectedCard.type === 'number') {
-        return selectedCard.color === currentCard.color || selectedCard.value === currentCard.value;
-    } else if (selectedCard.type === 'action') {
+    // If the selected card is an action card
+   else if (selectedCard.type === 'action') {
         switch (selectedCard.value) {
             case '10': // Skip card
-            case '11': // Reverse card
-            case '12': // Draw Two card
+                playAgain=true
                 return selectedCard.color === currentCard.color || selectedCard.value === currentCard.value;
-            case '13': // Wild card
-            case '14': // Wild Draw Four card
+
+            case '11': // Reverse card
+                playAgain=true
+                return selectedCard.color === currentCard.color || selectedCard.value === currentCard.value;
+
+            case '12': // Draw Two card
+                
+                playAgain=true
+                return selectedCard.color === currentCard.color || selectedCard.value === currentCard.value;
+                
+            case '13': 
+            // Wild card
+                // Wild cards can always be played
+                playAgain=true
                 return true;
+
+            case '14': 
+            // Wild Draw Four card
+            // Wild cards can always be played
+
+                playAgain=true
+                return true;
+
             default:
-                return false;
+                return false; 
         }
     }
+    return false;
 }
+
 
 const showColorPicker = () => {
     // show the color picker
@@ -365,115 +307,33 @@ function hideColorPicker() {
     colorPicker.style.opacity = 0
     colorPickerIsOpen = false
 }
-// Function to handle player's turn
-function playerTurn() {
-    // Check if the player has any valid cards to play
-    let validCards = player.filter(card => checkPlayConditions(card));
 
-    if (validCards.length > 0) {
-        // Player has valid cards to play
-        // Implement logic to allow the player to choose a card to play
-        // For simplicity, let's assume the player plays the first valid card in their hand
-        const selectedCard = validCards[0];
 
-        // Remove the selected card from the player's hand
-        const index = player.findIndex(card => card === selectedCard);
-        player.splice(index, 1);
 
-        // Update the current card
-        currentCard = selectedCard;
 
-        // Update the play pile card
-        const playPileImg = document.getElementById('card1');
-        playPileImg.src = currentCard.img;
 
-        // Re-render the player's cards
-        updatePlayerCards();
 
-        // Check if the player has won
-        if (player.length === 0) {
-            console.log("Player wins!");
-            // End the game or reset
-        } else {
-            // Switch turns to the computer
-            switchTurns();
-        }
-    } else {
-        // Player doesn't have any valid cards to play, so they must draw from the draw pile
-        console.log("Player draws a card from the draw pile.");
-        player.push(Draw.pop());
-        updatePlayerCards();
 
-        // Check if the drawn card can be played
-        if (checkPlayConditions(player[player.length - 1])) {
-            console.log("Player can play the drawn card.");
-            // Implement logic here if needed
-        } else {
-            console.log("Player cannot play the drawn card.");
-            // Switch turns to the computer
-            switchTurns();
-        }
-    }
+const showUno = (unoHand) => {
+    // remove hidden class from player-uno div
+    unoHand.classList.remove('hidden')
+    console.log('removed HIDDEN from', unoHand)
+
+    // add shout class
+    setTimeout(() => {
+        unoHand.classList.add('shout')
+        console.log('added SHOUT to', unoHand)
+        setTimeout(() => {
+            unoHand.classList.remove('shout')
+            console.log('removed SHOUT from', unoHand)
+
+            setTimeout(() => {
+                unoHand.classList.add('hidden')
+                console.log('added HIDDEN to', unoHand)
+            }, 1000)
+        }, 1000)
+    }, 10) 
 }
-function computerTurn() {
-    // Check if the computer has any valid cards to play
-    let validCards = computer.filter(card => checkPlayConditions(card));
-
-    if (validCards.length > 0) {
-        // Choose the first valid card from its hand
-        const selectedCard = validCards[0];
-        // Remove the selected card from the computer's hand
-        const index = computer.findIndex(card => card === selectedCard);
-        computer.splice(index, 1);
-        // Update the current card
-        currentCard = selectedCard;
-        // Update the play pile card
-        const playPileImg = document.getElementById('card1');
-        playPileImg.src = currentCard.img;
-        // Re-render the computer's cards
-        updateComputerCards();
-        // Check if the computer has won
-        if (computer.length === 0) {
-            console.log("Computer wins!");
-            // End the game or reset
-        } else {
-            // Switch turns to the player
-            switchTurns();
-        }
-    } else {
-        // Computer doesn't have any valid cards to play, so it must draw from the draw pile
-        console.log("Computer draws a card from the draw pile.");
-        computer.push(Draw.pop());
-        updateComputerCards();
-        // Check if the computer can play the drawn card
-        if (checkPlayConditions(computer[computer.length - 1])) {
-            console.log("Computer can play the drawn card.");
-            // Implement logic here if needed
-        } else {
-            console.log("Computer cannot play the drawn card.");
-            // Switch turns to the player
-            switchTurns();
-        }
-    }
-}
-
-
-
-function updateGameState() {
-    if (computerState) {
-        computerTurn();
-    } else if (playerState) {
-        playerTurn();
-    }
-}
-
-
-function switchTurns() {
-    playerState = !playerState;
-    computerState = !computerState;
-}
-
-
 
 
 
