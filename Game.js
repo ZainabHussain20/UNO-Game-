@@ -134,6 +134,7 @@ playPileImg.src = currentCard.img;
     }
    
     updatePlayerCards(); 
+    updateComputerCards();
 
   
 
@@ -222,6 +223,23 @@ function updatePlayerCards() {
 }
 
 
+function updateComputerCards() {
+    const computerCardsContainer = document.querySelector('.computerCard'); 
+    computerCardsContainer.innerHTML = '';
+
+    computer.forEach((card, index) => {
+        const cardImg = document.createElement('img');
+        cardImg.src = 'assets/back.png';
+
+        // For computer's cards, no event listeners are needed
+        //to disable interaction
+        cardImg.style.pointerEvents = 'none';
+
+        computerCardsContainer.appendChild(cardImg);
+    });
+}
+
+
 function checkPlayConditions(selectedCard, currentCard) {
     // Check if the selected card is a number card
     if (selectedCard.type === 'number') {
@@ -303,8 +321,12 @@ function hideColorPicker() {
     colorPickerIsOpen = false
 }
 
-function computerPlayer(){
-    
+function computerTurn(){
+
+}
+
+function playerTurn(){
+
 }
 
 letStart();
