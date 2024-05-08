@@ -238,17 +238,15 @@ function checkPlayConditions(selectedCard, currentCard) {
    else if (selectedCard.type === 'action') {
         switch (selectedCard.value) {
             case '10': // Skip card
-                // Allow playing a skip card if the colors match or if it's the same type as the current card
                 playAgain=true
                 return selectedCard.color === currentCard.color || selectedCard.value === currentCard.value;
 
             case '11': // Reverse card
-                // Allow playing a reverse card if the colors match or if it's the same type as the current card
                 playAgain=true
                 return selectedCard.color === currentCard.color || selectedCard.value === currentCard.value;
 
             case '12': // Draw Two card
-                // Allow playing a Draw Two card if the colors match or if it's the same type as the current card
+                
                 playAgain=true
                 return selectedCard.color === currentCard.color || selectedCard.value === currentCard.value;
                 
@@ -260,6 +258,8 @@ function checkPlayConditions(selectedCard, currentCard) {
 
             case '14': 
             // Wild Draw Four card
+            // Wild cards can always be played
+
                 playAgain=true
                 return true;
 
@@ -276,21 +276,16 @@ const showColorPicker = () => {
     colorPicker.style.opacity = 1
     colorPickerIsOpen = true
 
-    //assign eventHandler's to buttons
     document.querySelector('.red').addEventListener('click', (e) => {
-        // pass thru the class name for color
         chooseColor('rgb(255, 6, 0)')
     })
     document.querySelector('.green').addEventListener('click', (e) => {
-        // pass thru the class name for color
         chooseColor('rgb(0, 170, 69)')
     })
     document.querySelector('.blue').addEventListener('click', (e) => {
-        // pass thru the class name for color
         chooseColor('rgb(0, 150, 224)')
     })
     document.querySelector('.yellow').addEventListener('click', (e) => {
-        // pass thru the class name for color
         chooseColor('rgb(255, 222, 0)')
     })
 }
@@ -298,7 +293,7 @@ const showColorPicker = () => {
 const chooseColor = (rgb) => {
     currentCard.color = rgb; 
     selectedColor = rgb; 
-    // hide the color picker
+    // hide the color picker class again
     hideColorPicker();
 }
 
@@ -306,6 +301,10 @@ function hideColorPicker() {
     const colorPicker = document.querySelector('.color-picker')
     colorPicker.style.opacity = 0
     colorPickerIsOpen = false
+}
+
+function computerPlayer(){
+    
 }
 
 letStart();
