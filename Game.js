@@ -89,6 +89,8 @@ let computer=[]
 let currentCard=''
 let Draw=[]
 let UNO=[...initUNO]
+playAgain=false 
+let selectedColor =''
 
 //Search About it (I don't know it before)
 function shuffleArray(array) {
@@ -144,11 +146,13 @@ function letStart() {
             console.log("Player:", player); 
             console.log("Draw:", Draw); 
             updatePlayerCards(); 
+            playAgain = false; 
         }
         else {
             console.log('Draw empty')
         }
     });
+
     console.log('Current Card:', currentCard);
     console.log('Computer:', computer);
     console.log('Player:', player);
@@ -169,6 +173,7 @@ function resetGame() {
     Draw = [];
     letStart();
 }
+
 function updatePlayerCards() {
     const playerCardsContainer = document.querySelector('.PlayerCard');
     playerCardsContainer.innerHTML = '';
@@ -177,17 +182,95 @@ function updatePlayerCards() {
         const cardImg = document.createElement('img');
         cardImg.src = card.img;
         cardImg.addEventListener('click', () => {
-            currentCard = player[index];
-            // Remove the clicked card from the player array
-            player.splice(index, 1);
-            // Update the play pile card
-            const playPileImg = document.getElementById('card1');
-            playPileImg.src = currentCard.img;
-            // Re-render the player's cards
-            updatePlayerCards();
+            if (checkPlayConditions(player[index], currentCard)) {
+                currentCard = player[index];
+                // Remove the clicked card from the player array
+                player.splice(index, 1);
+                // Update the play pile card
+                const playPileImg = document.getElementById('card1');
+                playPileImg.src = currentCard.img;
+                // Re-render the player's cards
+                updatePlayerCards();
+                playAgain = false; // Reset playAgain flag after playing a valid card
+            } else {
+                console.log("You can't play this card");
+            }
         });
+
+        cardImg.addEventListener('mouseenter', () => {
+            if (player[index].type === 'action' && (player[index].value === '13' || player[index].value === '14')) {
+                // If it's a wild card, add a border with the color chosen by the user
+                cardImg.style.border = `2px solid ${selectedColor}`;
+            }
+        });
+        
+        cardImg.addEventListener('mouseleave', () => {
+            // Remove the border when the mouse leaves the card
+            cardImg.style.border = 'none';
+        });
+
+        // Add event listener for wild card to show color picker
+        if (card.type === 'action' && (card.value === '13' || card.value === '14')) {
+            cardImg.addEventListener('click', () => {
+                showColorPicker();
+            });
+        }
+
         playerCardsContainer.appendChild(cardImg);
     });
+}
+
+function checkPlayConditions(selectedCard, currentCard) {
+    // Check if the selected card is a number card
+    if (selectedCard.type === 'number') {
+        if (selectedCard.color === currentCard.color || selectedCard.value === currentCard.value) {
+            return true;
+        }
+        return false;
+    }
+
+
+
+    
+    // If the selected card is an action card
+   else if (selectedCard.type === 'action') {
+        switch (selectedCard.value) {
+            case '10': // Skip card
+                // Allow playing a skip card if the colors match or if it's the same type as the current card
+                playAgain=true
+                return selectedCard.color === currentCard.color || selectedCard.value === currentCard.value;
+
+            case '11': // Reverse card
+                // Allow playing a reverse card if the colors match or if it's the same type as the current card
+                playAgain=true
+                return selectedCard.color === currentCard.color || selectedCard.value === currentCard.value;
+
+            case '12': // Draw Two card
+                // Allow playing a Draw Two card if the colors match or if it's the same type as the current card
+                playAgain=true
+                return selectedCard.color === currentCard.color || selectedCard.value === currentCard.value;
+                
+            case '13': 
+            // Wild card
+                // Wild cards can always be played
+                playAgain=true
+                return true;
+
+            case '14': 
+            // Wild Draw Four card
+                playAgain=true
+                return true;
+
+            default:
+                return false; 
+        }
+    }
+    return false;
+}
+
+function showColorPicker() {
+    const colorPicker = document.querySelector('.color-picker');
+    colorPicker.classList.remove('hidden');
 }
 
 letStart();
