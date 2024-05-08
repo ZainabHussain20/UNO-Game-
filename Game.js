@@ -183,6 +183,7 @@ function resetGame() {
     letStart();
 }
 function updatePlayerCards() {
+    console.log("Player cards length:", player.length);
     const playerCardsContainer = document.querySelector('.PlayerCard');
     playerCardsContainer.innerHTML = '';
 
@@ -211,7 +212,17 @@ function updatePlayerCards() {
 
         playerCardsContainer.appendChild(cardImg);
     });
+    if (player.length === 1) {
+        const playerUnoImg = document.querySelector('#Player-uno');
+        console.log("Showing Uno animation");
+        playerUnoImg.classList.remove('hidden');
+    } else {
+        const playerUnoImg = document.querySelector('#Player-uno');
+        console.log("Hiding Uno animation");
+        playerUnoImg.classList.add('hidden');
+    }
 }
+
 
 
 
