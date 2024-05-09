@@ -93,7 +93,7 @@ let UNO=[...initUNO]
 playAgain=false 
 let selectedColor =''
 let playerTurn = true
-let cpuDelay = Math.floor((Math.random() * computer.length * 200) + 1500)
+// let cpuDelay = Math.floor((Math.random() * computer.length * 200) + 1500)
 
 
 
